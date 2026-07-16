@@ -3,39 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliação - Leovegildo Sistemas</title>
+    <title>Avaliação Leovtech</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; text-align: center; padding: 40px 20px; margin: 0; }
-        h1 { color: #333; margin-bottom: 30px; }
-        .grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; max-width: 800px; margin: auto; }
-        .colaborador-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s; width: 180px; text-decoration: none; color: inherit; }
-        .colaborador-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        .foto { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #007bff; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; text-align: center; margin: 0; padding-bottom: 40px; }
+        
+        /* =========================================
+           NOVO CABEÇALHO ESTILOSO
+           ========================================= */
+        .main-header {
+            background: linear-gradient(135deg, #0056b3 0%, #00a8ff 100%);
+            color: white;
+            padding: 40px 20px 50px 20px;
+            margin-bottom: -25px; /* Puxa os cartões um pouco para cima do cabeçalho */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+        
+        .main-header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        
+        .main-header .slogan {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-top: 2px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .main-header .pergunta-box {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .main-header h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        /* =========================================
+           RESTANTE DA PÁGINA
+           ========================================= */
+        .grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; max-width: 800px; margin: 0 auto; position: relative; z-index: 10; padding: 0 20px; }
+        
+        .colaborador-card { background: white; padding: 25px 20px; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); width: 170px; text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; }
+        .colaborador-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+        
+        .foto { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 4px solid #f8f9fa; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s; }
+        .colaborador-card:hover .foto { border-color: #007bff; }
+        
         .nome { font-size: 18px; font-weight: bold; color: #333; }
         .cargo { font-size: 14px; color: #777; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <h1>Quem lhe atendeu hoje?</h1>
-    <p style="color: #666; margin-bottom: 40px;">Selecione o colaborador para iniciar a avaliação de atendimento.</p>
+    
+    <div class="main-header">
+        <h1>Leovtech</h1>
+        <div class="slogan">Tecnologia de ponta</div>
+        
+        <div class="pergunta-box">
+            <h2>Quem lhe atendeu hoje?</h2>
+        </div>
+    </div>
     
     <div class="grid">
-        <a href="pesquisa.html?colab=Mariana Martins" class="colaborador-card">
-            <img src="fotos/mulher01.jpg" alt="Mariana" class="foto" onerror="this.src='https://ui-avatars.com/api/?name=Carlos+Silva&background=random'">
-            <div class="nome">Mariana Martins</div>
-            <div class="cargo">Vendedora</div>
+        <!-- Substitua o src da imagem pelos arquivos que você subir no GitHub -->
+        <a href="pesquisa.html?colab=Carlos Silva" class="colaborador-card">
+            <img src="fotos/carlos.jpg" alt="Carlos" class="foto" onerror="this.src='https://ui-avatars.com/api/?name=Carlos+Silva&background=random&color=fff'">
+            <div class="nome">Carlos Silva</div>
+            <div class="cargo">Suporte Técnico</div>
         </a>
 
-        <a href="pesquisa.html?colab=Suzane Pedra" class="colaborador-card">
-            <img src="fotos/mulher02.jpg" alt="Suzane" class="foto" onerror="this.src='https://ui-avatars.com/api/?name=Ana+Souza&background=random'">
-            <div class="nome">Suzane Pedra</div>
-            <div class="cargo">Gerente</div>
+        <a href="pesquisa.html?colab=Ana Souza" class="colaborador-card">
+            <img src="fotos/ana.jpg" alt="Ana" class="foto" onerror="this.src='https://ui-avatars.com/api/?name=Ana+Souza&background=random&color=fff'">
+            <div class="nome">Ana Souza</div>
+            <div class="cargo">Vendas</div>
         </a>
 
-        <a href="pesquisa.html?colab=Viviane Santana" class="colaborador-card">
-            <img src="fotos/mulher03.jpg" alt="Pedro" class="foto" onerror="this.src='https://ui-avatars.com/api/?name=Pedro+Alves&background=random'">
-            <div class="nome">Viviane Santana</div>
-            <div class="cargo">Supervisora</div>
+        <a href="pesquisa.html?colab=Pedro Alves" class="colaborador-card">
+            <img src="fotos/pedro.jpg" alt="Pedro" class="foto" onerror="this.src='https://ui-avatars.com/api/?name=Pedro+Alves&background=random&color=fff'">
+            <div class="nome">Pedro Alves</div>
+            <div class="cargo">Instalação</div>
         </a>
     </div>
 </body>
