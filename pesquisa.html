@@ -3,13 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesquisa - Leovegildo Sistemas</title>
+    <title>Pesquisa - Leovtech</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
         .container { background: #fff; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); text-align: center; max-width: 600px; width: 100%; }
-        h2 { color: #333; margin-bottom: 5px; font-size: 24px; }
-        .badge { display: inline-block; background: #e9ecef; padding: 6px 16px; border-radius: 20px; font-size: 14px; color: #555; margin-bottom: 25px; font-weight: bold; }
+        h2 { color: #333; margin-bottom: 20px; font-size: 24px; }
         
+        /* =========================================
+           NOVO CARTÃO DO COLABORADOR
+           ========================================= */
+        .colab-profile-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: #f8f9fa;
+            padding: 10px 25px 10px 10px;
+            border-radius: 50px;
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+            text-align: left;
+        }
+        .colab-profile-foto {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #007bff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .colab-profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .colab-profile-info span {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+        .colab-profile-info strong {
+            font-size: 17px;
+            color: #333;
+        }
+
+        /* =========================================
+           RESTANTE DO CSS
+           ========================================= */
         .nps-buttons { display: flex; justify-content: space-between; margin: 25px 0; gap: 5px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 10px; }
         .nps-btn { flex: 1; min-width: 45px; padding: 10px 0; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; border-radius: 8px; display: flex; flex-direction: column; align-items: center; transition: all 0.2s; }
         .nps-btn:hover { background: #f8f9fa; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
@@ -36,9 +76,6 @@
         .nps-buttons::-webkit-scrollbar { height: 6px; }
         .nps-buttons::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
-        /* =========================================
-           ESTILOS DO MODAL CUSTOMIZADO
-           ========================================= */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 1; transition: opacity 0.3s; }
         .modal-box { background: #fff; padding: 30px; border-radius: 12px; text-align: center; max-width: 320px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -52,7 +89,15 @@
 <body>
     <div class="container" id="survey-container">
         <h2>Avaliação de Atendimento</h2>
-        <div class="badge" id="nome-colaborador">Avaliando: Carregando...</div>
+        
+        <!-- Cartão do Colaborador Avaliado -->
+        <div class="colab-profile-box" id="colab-profile-box">
+            <img src="" alt="Foto do Colaborador" class="colab-profile-foto" id="foto-colaborador">
+            <div class="colab-profile-info">
+                <span>Avaliando</span>
+                <strong id="nome-colaborador">Carregando...</strong>
+            </div>
+        </div>
         
         <p style="color: #555; margin-bottom: 20px;">Em uma escala de 1 a 10, o quanto você recomendaria o atendimento deste colaborador?</p>
         
@@ -85,7 +130,7 @@
     </div>
 
     <script>
-        // Lógica do Modal Customizado
+        // Lógica do Modal
         let redirectAfterModal = false;
         
         function showModal(msg, redirect = false) {
@@ -101,15 +146,31 @@
             }
         }
 
-        // Pega o nome do colaborador pela URL
+        // Recupera o nome do colaborador da URL
         const urlParams = new URLSearchParams(window.location.search);
         const colaborador = urlParams.get('colab');
         
         if(!colaborador) {
-            // Usa o modal para avisar e depois redirecionar
+            // Se não tiver colaborador na URL, esconde o cartão e avisa
+            document.getElementById('colab-profile-box').style.display = 'none';
             showModal("Nenhum colaborador foi selecionado. Voltando para a seleção.", true);
         } else {
-            document.getElementById('nome-colaborador').innerText = `Avaliando: ${colaborador}`;
+            document.getElementById('nome-colaborador').innerText = colaborador;
+            
+            // Lógica para deduzir a foto baseada no nome
+            // Extrai o primeiro nome, remove acentos e converte para minúsculo
+            const primeiroNome = colaborador.split(' ')[0].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const imgElement = document.getElementById('foto-colaborador');
+            
+            // Tenta carregar a foto da pasta local (ex: fotos/carlos.jpg)
+            imgElement.src = `fotos/${primeiroNome}.jpg`;
+            
+            // Se a foto não existir na pasta, cai no onerror e gera a imagem com as iniciais
+            imgElement.onerror = function() {
+                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(colaborador)}&background=random&color=fff`;
+                // Remove o onerror para evitar loop caso a API caia
+                this.onerror = null; 
+            };
         }
 
         let selectedScore = null;
@@ -141,7 +202,7 @@
             btn.innerText = 'Enviando...'; 
             btn.disabled = true;
 
-            // IMPORTANTE: COLE SEU LINK DO GOOGLE APPS SCRIPT AQUI
+            // URL DO GOOGLE APPS SCRIPT
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwfUFsI0L8ry7gTQwjI0-WIaBD3OKl-IdVfQBshh2Ac8bbXx32WQS6ZsNWOpxCz5ynN/exec';
 
             try {
