@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa - Leovegildo Sistemas</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background: #fff; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); text-align: center; max-width: 600px; width: 100%; }
+        h2 { color: #333; margin-bottom: 5px; font-size: 24px; }
+        .badge { display: inline-block; background: #e9ecef; padding: 6px 16px; border-radius: 20px; font-size: 14px; color: #555; margin-bottom: 25px; font-weight: bold; }
+        
+        .nps-buttons { display: flex; justify-content: space-between; margin: 25px 0; gap: 5px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 10px; }
+        .nps-btn { flex: 1; min-width: 45px; padding: 10px 0; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; border-radius: 8px; display: flex; flex-direction: column; align-items: center; transition: all 0.2s; }
+        .nps-btn:hover { background: #f8f9fa; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        
+        .emoji { font-size: 24px; margin-bottom: 5px; transition: transform 0.2s; }
+        .num { font-size: 15px; font-weight: bold; color: #666; }
+        
+        .nps-btn.selected { transform: scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .nps-btn.selected .emoji { transform: scale(1.2); }
+        .nps-btn.selected .num { color: white; }
+        
+        .nps-btn.selected[data-val="1"], .nps-btn.selected[data-val="2"], .nps-btn.selected[data-val="3"], 
+        .nps-btn.selected[data-val="4"], .nps-btn.selected[data-val="5"], .nps-btn.selected[data-val="6"] { background: #dc3545; border-color: #dc3545; }
+        .nps-btn.selected[data-val="7"], .nps-btn.selected[data-val="8"] { background: #ffc107; border-color: #ffc107; }
+        .nps-btn.selected[data-val="7"] .num, .nps-btn.selected[data-val="8"] .num { color: #333; }
+        .nps-btn.selected[data-val="9"], .nps-btn.selected[data-val="10"] { background: #28a745; border-color: #28a745; }
+
+        textarea { width: 100%; height: 90px; margin-bottom: 20px; padding: 12px; box-sizing: border-box; border: 1px solid #e0e0e0; border-radius: 8px; resize: none; font-family: inherit; font-size: 14px; }
+        button.submit { background: #007bff; color: white; border: none; padding: 14px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.3s; }
+        button.submit:hover { background: #0056b3; }
+        .hidden { display: none !important; }
+        .labels { display: flex; justify-content: space-between; font-size: 13px; color: #888; margin-top: -10px; margin-bottom: 25px; font-weight: 500; }
+        
+        .nps-buttons::-webkit-scrollbar { height: 6px; }
+        .nps-buttons::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+
+        /* =========================================
+           ESTILOS DO MODAL CUSTOMIZADO
+           ========================================= */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 1; transition: opacity 0.3s; }
+        .modal-box { background: #fff; padding: 30px; border-radius: 12px; text-align: center; max-width: 320px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; animation: popIn 0.3s ease; }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-close { position: absolute; top: 12px; right: 15px; font-size: 24px; cursor: pointer; color: #aaa; line-height: 1; }
+        .modal-close:hover { color: #333; }
+        #modal-message { margin: 10px 0 25px; color: #444; font-size: 16px; line-height: 1.4; }
+        .modal-btn { background: #007bff; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; transition: 0.2s; }
+        .modal-btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container" id="survey-container">
+        <h2>Avaliação de Atendimento</h2>
+        <div class="badge" id="nome-colaborador">Avaliando: Carregando...</div>
+        
+        <p style="color: #555; margin-bottom: 20px;">Em uma escala de 1 a 10, o quanto você recomendaria o atendimento deste colaborador?</p>
+        
+        <div class="nps-buttons" id="nps-buttons"></div>
+        <div class="labels">
+            <span>1 - Muito Ruim</span>
+            <span>10 - Excelente</span>
+        </div>
+
+        <textarea id="feedback" placeholder="(Opcional) Deixe um comentário sobre o que motivou sua nota."></textarea>
+        <button class="submit" onclick="submitSurvey()">Enviar Avaliação</button>
+    </div>
+
+    <div class="container hidden" id="thank-you">
+        <h2 style="font-size: 40px; margin-bottom: 10px;">🎉</h2>
+        <h2>Muito Obrigado!</h2>
+        <p style="color: #666;">Sua avaliação foi registrada com sucesso e é muito importante para nós.</p>
+        <br>
+        <a href="index.html" style="display: inline-block; padding: 10px 20px; background: #e9ecef; color: #333; text-decoration: none; border-radius: 6px; font-weight: bold; transition: 0.2s;">← Voltar para o início</a>
+    </div>
+
+    <!-- ESTRUTURA DO MODAL -->
+    <div id="custom-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div style="font-size: 30px; margin-bottom: 10px;">⚠️</div>
+            <p id="modal-message">Mensagem de erro aqui.</p>
+            <button class="modal-btn" onclick="closeModal()">Entendi</button>
+        </div>
+    </div>
+
+    <script>
+        // Lógica do Modal Customizado
+        let redirectAfterModal = false;
+        
+        function showModal(msg, redirect = false) {
+            redirectAfterModal = redirect;
+            document.getElementById('modal-message').innerText = msg;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+            if(redirectAfterModal) {
+                window.location.href = "index.html";
+            }
+        }
+
+        // Pega o nome do colaborador pela URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const colaborador = urlParams.get('colab');
+        
+        if(!colaborador) {
+            // Usa o modal para avisar e depois redirecionar
+            showModal("Nenhum colaborador foi selecionado. Voltando para a seleção.", true);
+        } else {
+            document.getElementById('nome-colaborador').innerText = `Avaliando: ${colaborador}`;
+        }
+
+        let selectedScore = null;
+        const buttonsContainer = document.getElementById('nps-buttons');
+        const emojis = ['😡', '😠', '😞', '😕', '😐', '🙂', '😊', '😀', '😁', '🤩'];
+
+        for (let i = 1; i <= 10; i++) {
+            let btn = document.createElement('button');
+            btn.className = 'nps-btn';
+            btn.setAttribute('data-val', i);
+            btn.innerHTML = `<span class="emoji">${emojis[i-1]}</span><span class="num">${i}</span>`;
+            
+            btn.onclick = () => {
+                document.querySelectorAll('.nps-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedScore = i;
+            };
+            buttonsContainer.appendChild(btn);
+        }
+
+        async function submitSurvey() {
+            if (selectedScore === null) {
+                showModal("Por favor, selecione uma nota de 1 a 10 antes de enviar."); 
+                return;
+            }
+            
+            const feedback = document.getElementById('feedback').value;
+            const btn = document.querySelector('.submit');
+            btn.innerText = 'Enviando...'; 
+            btn.disabled = true;
+
+            // IMPORTANTE: COLE SEU LINK DO GOOGLE APPS SCRIPT AQUI
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwfUFsI0L8ry7gTQwjI0-WIaBD3OKl-IdVfQBshh2Ac8bbXx32WQS6ZsNWOpxCz5ynN/exec';
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ colaborador: colaborador, score: selectedScore, feedback: feedback })
+                });
+                document.getElementById('survey-container').classList.add('hidden');
+                document.getElementById('thank-you').classList.remove('hidden');
+            } catch (error) {
+                showModal("Ocorreu um erro ao enviar sua avaliação. Tente novamente.");
+                btn.innerText = 'Enviar Avaliação'; 
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

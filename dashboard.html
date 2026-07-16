@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard NPS - Leovtech</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; margin: 0; padding: 30px 20px; color: #333; }
+        
+        /* Estilos do Login */
+        .login-wrapper { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
+        .login-box { background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); text-align: center; width: 100%; max-width: 360px; }
+        .login-box h2 { margin-bottom: 25px; color: #333; font-size: 22px; }
+        .login-box input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        .login-box button { background: #007bff; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.3s; }
+        .login-box button:hover { background: #0056b3; }
+        .error-msg { color: #dc3545; font-size: 14px; margin-top: 10px; display: none; }
+
+        /* Estilos do Dashboard */
+        .container { max-width: 1000px; margin: auto; }
+        .hidden { display: none !important; }
+        
+        /* Cabeçalho com botão de Sair */
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 15px; }
+        .dashboard-header h1 { margin: 0; text-align: center; flex-grow: 1; }
+        .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .logout-btn:hover { background: #c82333; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        
+        .colab-card { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .colab-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .colab-header h2 { margin: 0; font-size: 20px; color: #007bff; }
+        
+        .nps-score { font-size: 32px; font-weight: bold; }
+        .stats { display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-bottom: 15px;}
+        
+        .feedback-list { max-height: 200px; overflow-y: auto; padding-right: 5px; }
+        .feedback-item { background: #fcfcfc; padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid #ccc; font-size: 13px; }
+        .feedback-item.promoter { border-left-color: #28a745; }
+        .feedback-item.passive { border-left-color: #ffc107; }
+        .feedback-item.detractor { border-left-color: #dc3545; }
+        .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; color: white; font-weight: bold; margin-right: 5px;}
+        
+        #loading { text-align: center; color: #666; font-size: 18px; display: none; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- TELA DE LOGIN -->
+    <div class="login-wrapper" id="login-screen">
+        <div class="login-box">
+            <h2>Dashboard Admin</h2>
+            <input type="text" id="username" placeholder="Usuário">
+            <input type="password" id="password" placeholder="Senha">
+            <button onclick="autenticar()">Entrar</button>
+            <div class="error-msg" id="error-message">Usuário ou senha incorretos!</div>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO DO DASHBOARD -->
+    <div class="container hidden" id="dashboard-content">
+        <div class="dashboard-header">
+            <div style="width: 60px;"></div> <!-- Espaçador para centralizar o título -->
+            <h1>Resultados por Colaborador</h1>
+            <button class="logout-btn" onclick="logout()">Sair</button>
+        </div>
+        
+        <div id="loading">Carregando dados da planilha...</div>
+        <div class="grid" id="dashboard-grid"></div>
+    </div>
+
+    <script>
+        const USUARIO_MOCADO = "admin";
+        const SENHA_MOCADA = "admin";
+        
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwfUFsI0L8ry7gTQwjI0-WIaBD3OKl-IdVfQBshh2Ac8bbXx32WQS6ZsNWOpxCz5ynN/exec';
+
+        // VERIFICA SESSÃO AO CARREGAR A PÁGINA
+        window.onload = function() {
+            // Permite submeter com a tecla Enter
+            document.getElementById("password").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") autenticar();
+            });
+
+            // Checa se já existe uma sessão salva
+            if (sessionStorage.getItem('leovtech_admin_logged') === 'true') {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard-content').classList.remove('hidden');
+                loadDashboard();
+            }
+        };
+
+        function autenticar() {
+            const userIn = document.getElementById('username').value;
+            const passIn = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error-message');
+
+            if (userIn === USUARIO_MOCADO && passIn === SENHA_MOCADA) {
+                // Salva a sessão no navegador
+                sessionStorage.setItem('leovtech_admin_logged', 'true');
+                
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard-content').classList.remove('hidden');
+                loadDashboard();
+                
+                // Limpa os campos de input por segurança
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                errorDiv.style.display = 'none';
+            } else {
+                errorDiv.style.display = 'block';
+                document.getElementById('password').value = '';
+            }
+        }
+
+        // FUNÇÃO DE DESLOGAR
+        function logout() {
+            sessionStorage.removeItem('leovtech_admin_logged');
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            // Limpa o painel para que os dados não fiquem escondidos no HTML
+            document.getElementById('dashboard-grid').innerHTML = ''; 
+        }
+
+        async function loadDashboard() {
+            const loadingEl = document.getElementById('loading');
+            const grid = document.getElementById('dashboard-grid');
+            
+            loadingEl.style.display = 'block';
+            loadingEl.innerText = "Conectando ao banco de dados...";
+            
+            try {
+                const response = await fetch(scriptURL);
+                const textData = await response.text(); 
+                
+                let data;
+                try {
+                    data = JSON.parse(textData);
+                } catch(e) {
+                    console.error("Retorno do Google:", textData);
+                    loadingEl.innerHTML = '<span style="color:red">Erro: O Google bloqueou o acesso aos dados.<br><br><b>Como resolver:</b> No Apps Script, vá em "Implantar" > "Gerenciar implantações" > "Editar" (lápis) e garanta que "Quem tem acesso" está marcado como <b>"Qualquer pessoa"</b>.</span>';
+                    return;
+                }
+                
+                loadingEl.style.display = 'none';
+                
+                if (data.length === 0) {
+                    grid.innerHTML = '<p style="text-align:center; width: 100%; color: #666;">Ainda não há nenhuma avaliação registrada na planilha.</p>';
+                    return;
+                }
+
+                const colaboradores = {};
+                
+                data.forEach(r => {
+                    if(!r.score) return; 
+
+                    let nome = r.colaborador || "Desconhecido";
+                    if (!colaboradores[nome]) {
+                        colaboradores[nome] = { promoters: 0, passives: 0, detractors: 0, total: 0, feedbacks: [] };
+                    }
+                    
+                    let score = parseInt(r.score);
+                    colaboradores[nome].total++;
+                    
+                    let typeClass = '';
+                    if (score >= 9) { colaboradores[nome].promoters++; typeClass = 'promoter'; }
+                    else if (score >= 7) { colaboradores[nome].passives++; typeClass = 'passive'; }
+                    else { colaboradores[nome].detractors++; typeClass = 'detractor'; }
+
+                    if (r.feedback && r.feedback.trim() !== '') {
+                        let dataStr = r.date;
+                        if(new Date(r.date).toString() !== "Invalid Date") {
+                            dataStr = new Date(r.date).toLocaleDateString('pt-BR');
+                        }
+                        colaboradores[nome].feedbacks.push({ score, text: r.feedback, class: typeClass, date: dataStr });
+                    }
+                });
+
+                grid.innerHTML = ''; 
+                
+                if(Object.keys(colaboradores).length === 0) {
+                    grid.innerHTML = '<p style="text-align:center; width: 100%; color: #666;">Nenhuma nota válida foi encontrada na planilha.</p>';
+                    return;
+                }
+
+                for (let nome in colaboradores) {
+                    let c = colaboradores[nome];
+                    
+                    let nps = Math.round(((c.promoters / c.total) - (c.detractors / c.total)) * 100);
+                    let npsColor = nps >= 50 ? '#28a745' : (nps > 0 ? '#ffc107' : '#dc3545');
+
+                    let feedbacksHTML = c.feedbacks.slice().reverse().map(f => `
+                        <div class="feedback-item ${f.class}">
+                            <span class="badge" style="background:${f.class === 'promoter' ? '#28a745' : (f.class === 'passive' ? '#ffc107' : '#dc3545')}">${f.score}</span>
+                            <strong>${f.date}:</strong> ${f.text}
+                        </div>
+                    `).join('');
+                    
+                    if(feedbacksHTML === '') feedbacksHTML = '<p style="color:#999; font-size:13px; text-align:center;">Sem comentários escritos.</p>';
+
+                    let card = document.createElement('div');
+                    card.className = 'colab-card';
+                    card.innerHTML = `
+                        <div class="colab-header">
+                            <h2>${nome}</h2>
+                            <span class="nps-score" style="color: ${npsColor}">${nps}</span>
+                        </div>
+                        <div class="stats">
+                            <span>Avaliações: <strong>${c.total}</strong></span>
+                            <span style="color:#28a745">P: ${c.promoters}</span>
+                            <span style="color:#ffc107">N: ${c.passives}</span>
+                            <span style="color:#dc3545">D: ${c.detractors}</span>
+                        </div>
+                        <div class="feedback-list">
+                            ${feedbacksHTML}
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                }
+
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                loadingEl.innerHTML = '<span style="color:red">Falha na conexão com o banco de dados. Verifique a URL do script ou se você está conectado à internet.</span>';
+            }
+        }
+    </script>
+</body>
+</html>

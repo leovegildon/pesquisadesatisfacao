@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação - Leovegildo Sistemas</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; text-align: center; padding: 40px 20px; margin: 0; }
+        h1 { color: #333; margin-bottom: 30px; }
+        .grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; max-width: 800px; margin: auto; }
+        .colaborador-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s; width: 180px; text-decoration: none; color: inherit; }
+        .colaborador-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+        .foto { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #007bff; }
+        .nome { font-size: 18px; font-weight: bold; color: #333; }
+        .cargo { font-size: 14px; color: #777; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Quem lhe atendeu hoje?</h1>
+    <p style="color: #666; margin-bottom: 40px;">Selecione o colaborador para iniciar a avaliação de atendimento.</p>
+    
+    <div class="grid">
+        <a href="pesquisa.html?colab=Mariana Martins" class="colaborador-card">
+            <img src="fotos/mulher01.jpg" alt="Mariana" class="foto" onerror="this.src='https://ui-avatars.com/api/?name=Carlos+Silva&background=random'">
+            <div class="nome">Mariana Martins</div>
+            <div class="cargo">Vendedora</div>
+        </a>
+
+        <a href="pesquisa.html?colab=Suzane Pedra" class="colaborador-card">
+            <img src="fotos/mulher02.jpg" alt="Suzane" class="foto" onerror="this.src='https://ui-avatars.com/api/?name=Ana+Souza&background=random'">
+            <div class="nome">Suzane Pedra</div>
+            <div class="cargo">Gerente</div>
+        </a>
+
+        <a href="pesquisa.html?colab=Viviane Santana" class="colaborador-card">
+            <img src="fotos/mulher03.jpg" alt="Pedro" class="foto" onerror="this.src='https://ui-avatars.com/api/?name=Pedro+Alves&background=random'">
+            <div class="nome">Viviane Santana</div>
+            <div class="cargo">Supervisora</div>
+        </a>
+    </div>
+</body>
+</html>
