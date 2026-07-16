@@ -3,27 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard NPS - Leovegildo Sistemas</title>
+    <title>Dashboard NPS - Elane Modas</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; margin: 0; padding: 30px 20px; color: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; margin: 0; padding-bottom: 40px; color: #333; }
         
-        /* Estilos do Login */
-        .login-wrapper { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
-        .login-box { background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); text-align: center; width: 100%; max-width: 360px; }
-        .login-box h2 { margin-bottom: 25px; color: #333; font-size: 22px; }
+        /* =========================================
+           CABEÇALHO ESTILOSO
+           ========================================= */
+        .main-header {
+            background: linear-gradient(135deg, #0056b3 0%, #00a8ff 100%);
+            color: white;
+            padding: 40px 20px 50px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            position: relative;
+            text-align: center;
+        }
+        
+        .main-header h1 { margin: 0; font-size: 32px; font-weight: 800; letter-spacing: 1px; }
+        .main-header .slogan { font-size: 13px; opacity: 0.85; margin-top: 2px; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 3px; }
+        
+        .main-header .pergunta-box {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .main-header h2 { margin: 0; font-size: 20px; font-weight: 500; }
+
+        /* =========================================
+           BOTÃO VOLTAR (CANTO SUPERIOR ESQUERDO)
+           ========================================= */
+        .home-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .home-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* =========================================
+           ESTILOS DO LOGIN E DASHBOARD
+           ========================================= */
+        .login-wrapper { display: flex; justify-content: center; align-items: center; min-height: 50vh; padding: 40px 20px; }
+        .login-box { background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); text-align: center; width: 100%; max-width: 360px; }
+        .login-box h3 { margin-top: 0; margin-bottom: 25px; color: #333; font-size: 20px; }
         .login-box input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
         .login-box button { background: #007bff; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.3s; }
         .login-box button:hover { background: #0056b3; }
         .error-msg { color: #dc3545; font-size: 14px; margin-top: 10px; display: none; }
 
-        /* Estilos do Dashboard */
-        .container { max-width: 1000px; margin: auto; }
+        .container { max-width: 1000px; margin: auto; padding: 30px 20px; }
         .hidden { display: none !important; }
         
-        /* Cabeçalho com botão de Sair */
-        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 15px; }
-        .dashboard-header h1 { margin: 0; text-align: center; flex-grow: 1; }
-        .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        /* Controle do Dashboard (Botão Sair) */
+        .dashboard-controls { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+        .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 13px; }
         .logout-btn:hover { background: #c82333; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
@@ -47,10 +104,23 @@
 </head>
 <body>
 
+    <!-- CABEÇALHO GLOBAL -->
+    <div class="main-header">
+        <a href="index.html" class="home-link">
+            <span>⬅️</span> Início
+        </a>
+        <h1>Elane Modas</h1>
+        <div class="slogan">A sua loja de Moda</div>
+        
+        <div class="pergunta-box">
+            <h2>Resultados por Colaborador</h2>
+        </div>
+    </div>
+
     <!-- TELA DE LOGIN -->
     <div class="login-wrapper" id="login-screen">
         <div class="login-box">
-            <h2>Dashboard Admin</h2>
+            <h3>Acesso Restrito</h3>
             <input type="text" id="username" placeholder="Usuário">
             <input type="password" id="password" placeholder="Senha">
             <button onclick="autenticar()">Entrar</button>
@@ -60,10 +130,9 @@
 
     <!-- CONTEÚDO DO DASHBOARD -->
     <div class="container hidden" id="dashboard-content">
-        <div class="dashboard-header">
-            <div style="width: 60px;"></div> <!-- Espaçador para centralizar o título -->
-            <h1>Resultados por Colaborador</h1>
-            <button class="logout-btn" onclick="logout()">Sair</button>
+        
+        <div class="dashboard-controls">
+            <button class="logout-btn" onclick="logout()">Sair do Sistema</button>
         </div>
         
         <div id="loading">Carregando dados da planilha...</div>
@@ -74,16 +143,14 @@
         const USUARIO_MOCADO = "admin";
         const SENHA_MOCADA = "admin";
         
+        // URL DO GOOGLE APPS SCRIPT
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwfUFsI0L8ry7gTQwjI0-WIaBD3OKl-IdVfQBshh2Ac8bbXx32WQS6ZsNWOpxCz5ynN/exec';
 
-        // VERIFICA SESSÃO AO CARREGAR A PÁGINA
         window.onload = function() {
-            // Permite submeter com a tecla Enter
             document.getElementById("password").addEventListener("keypress", function(event) {
                 if (event.key === "Enter") autenticar();
             });
 
-            // Checa se já existe uma sessão salva
             if (sessionStorage.getItem('leovtech_admin_logged') === 'true') {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('dashboard-content').classList.remove('hidden');
@@ -97,14 +164,12 @@
             const errorDiv = document.getElementById('error-message');
 
             if (userIn === USUARIO_MOCADO && passIn === SENHA_MOCADA) {
-                // Salva a sessão no navegador
                 sessionStorage.setItem('leovtech_admin_logged', 'true');
                 
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('dashboard-content').classList.remove('hidden');
                 loadDashboard();
                 
-                // Limpa os campos de input por segurança
                 document.getElementById('username').value = '';
                 document.getElementById('password').value = '';
                 errorDiv.style.display = 'none';
@@ -114,12 +179,10 @@
             }
         }
 
-        // FUNÇÃO DE DESLOGAR
         function logout() {
             sessionStorage.removeItem('leovtech_admin_logged');
             document.getElementById('dashboard-content').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
-            // Limpa o painel para que os dados não fiquem escondidos no HTML
             document.getElementById('dashboard-grid').innerHTML = ''; 
         }
 

@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliação - Leovegildo Sistemas</title>
+    <title>Avaliação - Elane Modas</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; text-align: center; margin: 0; padding-bottom: 40px; }
         
         /* =========================================
-           NOVO CABEÇALHO ESTILOSO
+           CABEÇALHO ESTILOSO
            ========================================= */
         .main-header {
             background: linear-gradient(135deg, #0056b3 0%, #00a8ff 100%);
             color: white;
             padding: 40px 20px 50px 20px;
-            margin-bottom: -25px; /* Puxa os cartões um pouco para cima do cabeçalho */
+            margin-bottom: -25px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border-bottom-left-radius: 30px;
             border-bottom-right-radius: 30px;
+            position: relative; /* Necessário para posicionar o botão Admin */
         }
         
         .main-header h1 {
@@ -53,6 +54,34 @@
         }
 
         /* =========================================
+           BOTÃO DASHBOARD (CANTO SUPERIOR DIREITO)
+           ========================================= */
+        .admin-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* =========================================
            RESTANTE DA PÁGINA
            ========================================= */
         .grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; max-width: 800px; margin: 0 auto; position: relative; z-index: 10; padding: 0 20px; }
@@ -70,15 +99,20 @@
 <body>
     
     <div class="main-header">
+        <!-- Novo Botão do Dashboard -->
+        <a href="dashboard.html" class="admin-link">
+            <span>⚙️</span> Dashboard
+        </a>
+
         <h1>Elane Modas</h1>
-        <div class="slogan">A sua loja de moda</div>
+        <div class="slogan">A sua loja de Moda</div>
         
         <div class="pergunta-box">
             <h2>Quem lhe atendeu hoje?</h2>
         </div>
     </div>
-    
     <div class="grid">
+        <!-- Substitua o src da imagem pelos arquivos que você subir no GitHub -->
         <a href="pesquisa.html?colab=Mariana Martins" class="colaborador-card">
             <img src="fotos/mulher01.jpg" alt="Mariana" class="foto" onerror="this.src='https://ui-avatars.com/api/?name=Carlos+Silva&background=random&color=fff'">
             <div class="nome">Mariana Martins</div>
