@@ -3,79 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesquisa - Leovtech</title>
+    <title>Pesquisa - Elane Modas</title>
+    <!-- CSS de Segurança: Oculta tudo até o script confirmar que está logado -->
+    <style> body { display: none; } </style> 
+    
+    <script>
+        // TRAVA DE SEGURANÇA: Se não fez login no index.html ou dashboard, é expulso imediatamente.
+        if (sessionStorage.getItem('leovtech_auth') !== 'true') {
+            window.location.href = "index.html";
+        } else {
+            document.write('<style> body { display: flex !important; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; } </style>');
+        }
+    </script>
+
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
         .container { background: #fff; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); text-align: center; max-width: 600px; width: 100%; }
         h2 { color: #333; margin-bottom: 20px; font-size: 24px; }
-        
-        /* =========================================
-           NOVO CARTÃO DO COLABORADOR
-           ========================================= */
-        .colab-profile-box {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            background: #f8f9fa;
-            padding: 10px 25px 10px 10px;
-            border-radius: 50px;
-            margin-bottom: 30px;
-            border: 1px solid #eee;
-            text-align: left;
-        }
-        .colab-profile-foto {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #007bff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .colab-profile-info {
-            display: flex;
-            flex-direction: column;
-        }
-        .colab-profile-info span {
-            font-size: 11px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 2px;
-        }
-        .colab-profile-info strong {
-            font-size: 17px;
-            color: #333;
-        }
-
-        /* =========================================
-           RESTANTE DO CSS
-           ========================================= */
+        .colab-profile-box { display: inline-flex; align-items: center; gap: 15px; background: #f8f9fa; padding: 10px 25px 10px 10px; border-radius: 50px; margin-bottom: 30px; border: 1px solid #eee; text-align: left; }
+        .colab-profile-foto { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #fff; }
+        .colab-profile-info { display: flex; flex-direction: column; }
+        .colab-profile-info span { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+        .colab-profile-info strong { font-size: 17px; color: #333; }
         .nps-buttons { display: flex; justify-content: space-between; margin: 25px 0; gap: 5px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 10px; }
         .nps-btn { flex: 1; min-width: 45px; padding: 10px 0; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; border-radius: 8px; display: flex; flex-direction: column; align-items: center; transition: all 0.2s; }
         .nps-btn:hover { background: #f8f9fa; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-        
         .emoji { font-size: 24px; margin-bottom: 5px; transition: transform 0.2s; }
         .num { font-size: 15px; font-weight: bold; color: #666; }
-        
         .nps-btn.selected { transform: scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .nps-btn.selected .emoji { transform: scale(1.2); }
         .nps-btn.selected .num { color: white; }
-        
-        .nps-btn.selected[data-val="1"], .nps-btn.selected[data-val="2"], .nps-btn.selected[data-val="3"], 
-        .nps-btn.selected[data-val="4"], .nps-btn.selected[data-val="5"], .nps-btn.selected[data-val="6"] { background: #dc3545; border-color: #dc3545; }
+        .nps-btn.selected[data-val="1"], .nps-btn.selected[data-val="2"], .nps-btn.selected[data-val="3"], .nps-btn.selected[data-val="4"], .nps-btn.selected[data-val="5"], .nps-btn.selected[data-val="6"] { background: #dc3545; border-color: #dc3545; }
         .nps-btn.selected[data-val="7"], .nps-btn.selected[data-val="8"] { background: #ffc107; border-color: #ffc107; }
         .nps-btn.selected[data-val="7"] .num, .nps-btn.selected[data-val="8"] .num { color: #333; }
         .nps-btn.selected[data-val="9"], .nps-btn.selected[data-val="10"] { background: #28a745; border-color: #28a745; }
-
         textarea { width: 100%; height: 90px; margin-bottom: 20px; padding: 12px; box-sizing: border-box; border: 1px solid #e0e0e0; border-radius: 8px; resize: none; font-family: inherit; font-size: 14px; }
         button.submit { background: #007bff; color: white; border: none; padding: 14px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.3s; }
         button.submit:hover { background: #0056b3; }
         .hidden { display: none !important; }
         .labels { display: flex; justify-content: space-between; font-size: 13px; color: #888; margin-top: -10px; margin-bottom: 25px; font-weight: 500; }
-        
         .nps-buttons::-webkit-scrollbar { height: 6px; }
         .nps-buttons::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
-
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 1; transition: opacity 0.3s; }
         .modal-box { background: #fff; padding: 30px; border-radius: 12px; text-align: center; max-width: 320px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -90,9 +57,8 @@
     <div class="container" id="survey-container">
         <h2>Avaliação de Atendimento</h2>
         
-        <!-- Cartão do Colaborador Avaliado -->
         <div class="colab-profile-box" id="colab-profile-box">
-            <img src="" alt="Foto do Colaborador" class="colab-profile-foto" id="foto-colaborador">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Foto" class="colab-profile-foto" id="foto-colaborador">
             <div class="colab-profile-info">
                 <span>Avaliando</span>
                 <strong id="nome-colaborador">Carregando...</strong>
@@ -108,7 +74,7 @@
         </div>
 
         <textarea id="feedback" placeholder="(Opcional) Deixe um comentário sobre o que motivou sua nota."></textarea>
-        <button class="submit" onclick="submitSurvey()">Enviar Avaliação</button>
+        <button class="submit" id="btn-submit">Enviar Avaliação</button>
     </div>
 
     <div class="container hidden" id="thank-you">
@@ -119,58 +85,69 @@
         <a href="index.html" style="display: inline-block; padding: 10px 20px; background: #e9ecef; color: #333; text-decoration: none; border-radius: 6px; font-weight: bold; transition: 0.2s;">← Voltar para o início</a>
     </div>
 
-    <!-- ESTRUTURA DO MODAL -->
     <div id="custom-modal" class="modal-overlay hidden">
         <div class="modal-box">
-            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <span class="modal-close" id="btn-close-modal-x">&times;</span>
             <div style="font-size: 30px; margin-bottom: 10px;">⚠️</div>
             <p id="modal-message">Mensagem de erro aqui.</p>
-            <button class="modal-btn" onclick="closeModal()">Entendi</button>
+            <button class="modal-btn" id="btn-close-modal">Entendi</button>
         </div>
     </div>
 
-    <script>
-        // Lógica do Modal
+    <!-- Importação do Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // =========================================================
+        // Autenticação Firebase
+        // =========================================================
+                const firebaseConfig = {
+                        apiKey: "AIzaSyCzZMFsQepPQcagU14TH3Ag2oeZcJ7lav0",
+                        authDomain: "pesquisadesatisfacao-3d499.firebaseapp.com",
+                        projectId: "pesquisadesatisfacao-3d499",
+                        storageBucket: "pesquisadesatisfacao-3d499.firebasestorage.app",
+                        messagingSenderId: "659023601137",
+                        appId: "1:659023601137:web:c786f5e291c10fddb4b850",
+                        measurementId: "G-XZSNL37MM5"
+};
+
+        // =========================================================
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         let redirectAfterModal = false;
-        
-        function showModal(msg, redirect = false) {
-            redirectAfterModal = redirect;
-            document.getElementById('modal-message').innerText = msg;
-            document.getElementById('custom-modal').classList.remove('hidden');
-        }
+        function showModal(msg, redirect = false) { redirectAfterModal = redirect; document.getElementById('modal-message').innerText = msg; document.getElementById('custom-modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('custom-modal').classList.add('hidden'); if(redirectAfterModal) window.location.href = "index.html"; }
+        document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+        document.getElementById('btn-close-modal-x').addEventListener('click', closeModal);
 
-        function closeModal() {
-            document.getElementById('custom-modal').classList.add('hidden');
-            if(redirectAfterModal) {
-                window.location.href = "index.html";
-            }
-        }
-
-        // Recupera o nome do colaborador da URL
         const urlParams = new URLSearchParams(window.location.search);
         const colaborador = urlParams.get('colab');
         
         if(!colaborador) {
-            // Se não tiver colaborador na URL, esconde o cartão e avisa
             document.getElementById('colab-profile-box').style.display = 'none';
             showModal("Nenhum colaborador foi selecionado. Voltando para a seleção.", true);
         } else {
             document.getElementById('nome-colaborador').innerText = colaborador;
-            
-            // Lógica para deduzir a foto baseada no nome
-            // Extrai o primeiro nome, remove acentos e converte para minúsculo
-            const primeiroNome = colaborador.split(' ')[0].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            carregarFotoColaborador(colaborador);
+        }
+
+        async function carregarFotoColaborador(nome) {
             const imgElement = document.getElementById('foto-colaborador');
+            const fotoFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=random&color=fff`;
             
-            // Tenta carregar a foto da pasta local (ex: fotos/carlos.jpg)
-            imgElement.src = `fotos/${primeiroNome}.jpg`;
-            
-            // Se a foto não existir na pasta, cai no onerror e gera a imagem com as iniciais
-            imgElement.onerror = function() {
-                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(colaborador)}&background=random&color=fff`;
-                // Remove o onerror para evitar loop caso a API caia
-                this.onerror = null; 
-            };
+            try {
+                const q = query(collection(db, "colaboradores"), where("nome", "==", nome));
+                const snapshot = await getDocs(q);
+                
+                if (!snapshot.empty) {
+                    const dados = snapshot.docs[0].data();
+                    imgElement.src = dados.fotoUrl ? dados.fotoUrl : fotoFallback;
+                } else { imgElement.src = fotoFallback; }
+            } catch (e) { imgElement.src = fotoFallback; }
+            imgElement.onerror = function() { this.onerror = null; this.src = fotoFallback; }
         }
 
         let selectedScore = null;
@@ -178,47 +155,31 @@
         const emojis = ['😡', '😠', '😞', '😕', '😐', '🙂', '😊', '😀', '😁', '🤩'];
 
         for (let i = 1; i <= 10; i++) {
-            let btn = document.createElement('button');
-            btn.className = 'nps-btn';
-            btn.setAttribute('data-val', i);
+            let btn = document.createElement('button'); btn.className = 'nps-btn'; btn.setAttribute('data-val', i);
             btn.innerHTML = `<span class="emoji">${emojis[i-1]}</span><span class="num">${i}</span>`;
-            
-            btn.onclick = () => {
-                document.querySelectorAll('.nps-btn').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                selectedScore = i;
-            };
+            btn.onclick = () => { document.querySelectorAll('.nps-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); selectedScore = i; };
             buttonsContainer.appendChild(btn);
         }
 
-        async function submitSurvey() {
-            if (selectedScore === null) {
-                showModal("Por favor, selecione uma nota de 1 a 10 antes de enviar."); 
-                return;
-            }
+        document.getElementById('btn-submit').addEventListener('click', async () => {
+            if (selectedScore === null) { showModal("Por favor, selecione uma nota de 1 a 10 antes de enviar."); return; }
             
             const feedback = document.getElementById('feedback').value;
-            const btn = document.querySelector('.submit');
-            btn.innerText = 'Enviando...'; 
-            btn.disabled = true;
-
-            // URL DO GOOGLE APPS SCRIPT
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwfUFsI0L8ry7gTQwjI0-WIaBD3OKl-IdVfQBshh2Ac8bbXx32WQS6ZsNWOpxCz5ynN/exec';
+            const btn = document.getElementById('btn-submit');
+            btn.innerText = 'Enviando...'; btn.disabled = true;
 
             try {
-                await fetch(scriptURL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ colaborador: colaborador, score: selectedScore, feedback: feedback })
+                await addDoc(collection(db, "avaliacoes"), {
+                    colaborador: colaborador, score: selectedScore, feedback: feedback,
+                    date: new Date().toLocaleDateString('pt-BR'), timestamp: new Date() 
                 });
                 document.getElementById('survey-container').classList.add('hidden');
                 document.getElementById('thank-you').classList.remove('hidden');
             } catch (error) {
-                showModal("Ocorreu um erro ao enviar sua avaliação. Tente novamente.");
-                btn.innerText = 'Enviar Avaliação'; 
-                btn.disabled = false;
+                showModal("Ocorreu um erro de conexão. Tente novamente.");
+                btn.innerText = 'Enviar Avaliação'; btn.disabled = false;
             }
-        }
+        });
     </script>
 </body>
 </html>
