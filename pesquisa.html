@@ -51,6 +51,15 @@
         #modal-message { margin: 10px 0 25px; color: #444; font-size: 16px; line-height: 1.4; }
         .modal-btn { background: #007bff; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; transition: 0.2s; }
         .modal-btn:hover { background: #0056b3; }
+        .binary-buttons { display: flex; gap: 10px; margin: 15px 0; }
+        .btn-bin { flex: 1; padding: 12px; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; border-radius: 8px; font-weight: bold; }
+        .btn-bin.selected { background: #007bff; color: white; }
+        .btn-sim { flex: 1; padding: 12px; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; border-radius: 8px; font-weight: bold; }
+        .btn-sim.selected { background: #1d9402; color: white; }
+        .btn-sim:hover { background: #1d9402; }
+        .btn-nao { flex: 1; padding: 12px; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; border-radius: 8px; font-weight: bold; }
+        .btn-nao.selected { background: #dc0101; color: white; }
+        .btn-nao:hover { background: #dc0101; }
     </style>
 </head>
 <body>
@@ -73,7 +82,21 @@
             <span>10 - Excelente</span>
         </div>
 
-        <textarea id="feedback" placeholder="(Opcional) Deixe um comentário sobre o que motivou sua nota."></textarea>
+        <!-- Pergunta 2 -->
+        <p>2. Deixe um comentário sobre o que motivou a sua nota.</p>
+        <textarea id="motivo-escolha" placeholder="Nos fale um pouco mais."></textarea>
+
+        <!-- Pergunta 3 -->
+        <p>3. O que levou você a escolher a nossa empresa?</p>
+        <textarea id="feedback" placeholder="Conte-nos o motivo..."></textarea>
+
+        <!-- Pergunta 4 -->
+        <p>4. Você nos indicaria para outras pessoas?</p>
+        <div class="binary-buttons">
+            <button class="btn-sim" id="btn-indica-sim" onclick="selecionarIndicacao('SIM')">SIM</button>
+            <button class="btn-nao" id="btn-indica-nao" onclick="selecionarIndicacao('NAO')">NÃO</button>
+        </div>
+        <textarea id="feedback-nao" class="hidden" placeholder="Conta pra gente o que motivou sua resposta."></textarea>
         <button class="submit" id="btn-submit">Enviar Avaliação</button>
     </div>
 
@@ -118,10 +141,19 @@
         const db = getFirestore(app);
 
         let redirectAfterModal = false;
+        let selectedIndicacao = null;
         function showModal(msg, redirect = false) { redirectAfterModal = redirect; document.getElementById('modal-message').innerText = msg; document.getElementById('custom-modal').classList.remove('hidden'); }
         function closeModal() { document.getElementById('custom-modal').classList.add('hidden'); if(redirectAfterModal) window.location.href = "index.html"; }
         document.getElementById('btn-close-modal').addEventListener('click', closeModal);
         document.getElementById('btn-close-modal-x').addEventListener('click', closeModal);
+
+        // Lógica de Indicação
+        window.selecionarIndicacao = (val) => {
+            selectedIndicacao = val;
+            document.getElementById('btn-indica-sim').classList.toggle('selected', val === 'SIM');
+            document.getElementById('btn-indica-nao').classList.toggle('selected', val === 'NAO');
+            document.getElementById('feedback-nao').classList.toggle('hidden', val !== 'NAO');
+        };
 
         const urlParams = new URLSearchParams(window.location.search);
         const colaborador = urlParams.get('colab');
@@ -170,7 +202,12 @@
 
             try {
                 await addDoc(collection(db, "avaliacoes"), {
-                    colaborador: colaborador, score: selectedScore, feedback: feedback,
+                    colaborador: colaborador, 
+                    score: selectedScore, 
+                    feedback: feedback, 
+                    motivoEscolha: document.getElementById('motivo-escolha').value, 
+                    indicaria: selectedIndicacao,
+                    feedbackNegativo: document.getElementById('feedback-nao').value,
                     date: new Date().toLocaleDateString('pt-BR'), timestamp: new Date() 
                 });
                 document.getElementById('survey-container').classList.add('hidden');
