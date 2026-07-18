@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa - Leovtech</title>
+    <style> body { display: none; } </style> 
+    <script>
+        if (sessionStorage.getItem('leovtech_auth') !== 'true') { window.location.href = "index.html"; }
+        else { document.write('<style> body { display: flex !important; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; } </style>'); }
+    </script>
+
+    <style>
+        .container { background: #fff; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); text-align: center; max-width: 600px; width: 100%; }
+        h2 { color: #333; margin-bottom: 20px; font-size: 20px; }
+        .colab-profile-box { display: inline-flex; align-items: center; gap: 15px; background: #f8f9fa; padding: 10px 25px 10px 10px; border-radius: 50px; margin-bottom: 30px; border: 1px solid #eee; text-align: left; }
+        .colab-profile-foto { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff; background: #fff; }
+        .nps-buttons { display: flex; justify-content: space-between; margin: 15px 0; gap: 5px; }
+        .nps-btn { flex: 1; padding: 10px 0; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; border-radius: 8px; font-weight: bold; }
+        .nps-btn.selected { background: #007bff; color: white; border-color: #007bff; }
+        
+        .binary-buttons { display: flex; gap: 10px; margin: 15px 0; }
+        .btn-bin { flex: 1; padding: 12px; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; border-radius: 8px; font-weight: bold; }
+        .btn-bin.selected { background: #007bff; color: white; }
+        
+        textarea { width: 100%; height: 80px; margin-top: 10px; padding: 12px; box-sizing: border-box; border: 1px solid #e0e0e0; border-radius: 8px; }
+        button.submit { background: #28a745; color: white; border: none; padding: 14px; font-size: 16px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .hidden { display: none !important; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-box { background: #fff; padding: 30px; border-radius: 12px; text-align: center; max-width: 320px; width: 90%; }
+        .modal-btn { background: #007bff; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="container" id="survey-container">
+        <h2>Avaliação de Atendimento</h2>
+        <div class="colab-profile-box" id="colab-profile-box">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" class="colab-profile-foto" id="foto-colaborador">
+            <div><strong id="nome-colaborador">...</strong></div>
+        </div>
+        
+        <!-- Pergunta 1 -->
+        <p>1. De 1 a 10, o quanto recomendaria o atendimento?</p>
+        <div class="nps-buttons" id="nps-buttons"></div>
+
+        <!-- Pergunta 2 -->
+        <p>2. Deixe um comentário sobre o que motivou a sua nota.</p>
+        <textarea id="motivo-escolha" placeholder="Conte-nos o motivo..."></textarea>
+
+        <!-- Pergunta 2 -->
+        <p>2. O que levou você a escolher a nossa empresa?</p>
+        <textarea id="motivo-escolha" placeholder="Conte-nos o motivo..."></textarea>
+
+        <!-- Pergunta 3 -->
+        <p>3. Você nos indicaria para outras pessoas?</p>
+        <div class="binary-buttons">
+            <button class="btn-bin" id="btn-indica-sim" onclick="selecionarIndicacao('SIM')">SIM</button>
+            <button class="btn-bin" id="btn-indica-nao" onclick="selecionarIndicacao('NAO')">NÃO</button>
+        </div>
+        <textarea id="feedback-nao" class="hidden" placeholder="Conta pra gente o que motivou sua resposta."></textarea>
+
+        <button class="submit" id="btn-submit">Enviar Avaliação</button>
+    </div>
+
+    <!-- Modais e Script de envio -->
+    <div id="custom-modal" class="modal-overlay hidden"><div class="modal-box"><p id="modal-message"></p><button class="modal-btn" onclick="document.getElementById('custom-modal').classList.add('hidden')">Entendi</button></div></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = { /* SEU CONFIG AQUI */ };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let selectedScore = null;
+        let selectedIndicacao = null;
+
+        // Render NPS
+        const buttonsContainer = document.getElementById('nps-buttons');
+        for (let i = 1; i <= 10; i++) {
+            let btn = document.createElement('button'); btn.className = 'nps-btn'; btn.innerText = i;
+            btn.onclick = () => { document.querySelectorAll('.nps-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); selectedScore = i; };
+            buttonsContainer.appendChild(btn);
+        }
+
+        // Lógica de Indicação
+        window.selecionarIndicacao = (val) => {
+            selectedIndicacao = val;
+            document.getElementById('btn-indica-sim').classList.toggle('selected', val === 'SIM');
+            document.getElementById('btn-indica-nao').classList.toggle('selected', val === 'NAO');
+            document.getElementById('feedback-nao').classList.toggle('hidden', val !== 'NAO');
+        };
+
+        document.getElementById('btn-submit').addEventListener('click', async () => {
+            if (!selectedScore || !selectedIndicacao) { alert("Por favor, responda todas as perguntas."); return; }
+            
+            const btn = document.getElementById('btn-submit'); btn.innerText = 'Enviando...';
+            try {
+                await addDoc(collection(db, "avaliacoes"), {
+                    colaborador: new URLSearchParams(window.location.search).get('colab'),
+                    score: selectedScore,
+                    motivoEscolha: document.getElementById('motivo-escolha').value,
+                    indicaria: selectedIndicacao,
+                    feedbackNegativo: document.getElementById('feedback-nao').value,
+                    date: new Date().toLocaleDateString('pt-BR'),
+                    timestamp: new Date()
+                });
+                document.getElementById('survey-container').innerHTML = '<h2>Obrigado pela sua opinião!</h2>';
+            } catch (e) { alert("Erro ao enviar."); }
+        });
+    </script>
+</body>
+</html>
