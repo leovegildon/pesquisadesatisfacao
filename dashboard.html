@@ -3,70 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard NPS - Elane Modas</title>
+    <title>Dashboard Admin - Elane Modas</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; margin: 0; padding-bottom: 40px; color: #333; }
         
-        /* =========================================
-           CABEÇALHO ESTILOSO
-           ========================================= */
-        .main-header {
-            background: linear-gradient(135deg, #0056b3 0%, #00a8ff 100%);
-            color: white;
-            padding: 40px 20px 50px 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            position: relative;
-            text-align: center;
-        }
-        
-        .main-header h1 { margin: 0; font-size: 32px; font-weight: 800; letter-spacing: 1px; }
-        .main-header .slogan { font-size: 13px; opacity: 0.85; margin-top: 2px; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 3px; }
-        
-        .main-header .pergunta-box {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            padding: 12px 30px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .main-header h2 { margin: 0; font-size: 20px; font-weight: 500; }
+        .main-header { background: linear-gradient(135deg, #0056b3 0%, #00a8ff 100%); color: white; padding: 30px 20px 40px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; position: relative; text-align: center; }
+        .main-header h1 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 1px; }
+        .main-header .slogan { font-size: 12px; opacity: 0.85; margin-top: 2px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 3px; }
+        .home-link { position: absolute; top: 20px; left: 20px; background: rgba(255, 255, 255, 0.15); color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.3s ease; display: flex; align-items: center; gap: 6px; }
+        .home-link:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
 
-        /* =========================================
-           BOTÃO VOLTAR (CANTO SUPERIOR ESQUERDO)
-           ========================================= */
-        .home-link {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .home-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        /* =========================================
-           ESTILOS DO LOGIN E DASHBOARD
-           ========================================= */
         .login-wrapper { display: flex; justify-content: center; align-items: center; min-height: 50vh; padding: 40px 20px; }
         .login-box { background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); text-align: center; width: 100%; max-width: 360px; }
         .login-box h3 { margin-top: 0; margin-bottom: 25px; color: #333; font-size: 20px; }
@@ -78,215 +24,420 @@
         .container { max-width: 1000px; margin: auto; padding: 30px 20px; }
         .hidden { display: none !important; }
         
-        /* Controle do Dashboard (Botão Sair) */
-        .dashboard-controls { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+        .dashboard-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+        .tabs { display: flex; gap: 10px; background: #e9ecef; padding: 5px; border-radius: 10px; }
+        .tab-btn { background: transparent; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; color: #555; transition: 0.2s; font-size: 14px; }
+        .tab-btn.active { background: #fff; color: #007bff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 13px; }
         .logout-btn:hover { background: #c82333; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        
         .colab-card { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .colab-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
         .colab-header h2 { margin: 0; font-size: 20px; color: #007bff; }
-        
         .nps-score { font-size: 32px; font-weight: bold; }
         .stats { display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-bottom: 15px;}
-        
         .feedback-list { max-height: 200px; overflow-y: auto; padding-right: 5px; }
         .feedback-item { background: #fcfcfc; padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid #ccc; font-size: 13px; }
-        .feedback-item.promoter { border-left-color: #28a745; }
-        .feedback-item.passive { border-left-color: #ffc107; }
-        .feedback-item.detractor { border-left-color: #dc3545; }
-        .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; color: white; font-weight: bold; margin-right: 5px;}
         
-        #loading { text-align: center; color: #666; font-size: 18px; display: none; margin-top: 20px; }
+        .admin-panel { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        @media (max-width: 768px) { .admin-panel { grid-template-columns: 1fr; } }
+        
+        .form-box, .list-box { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
+        .form-box.modo-edicao { border: 2px solid #ffc107; box-shadow: 0 4px 20px rgba(255, 193, 7, 0.15); }
+        .form-box h3, .list-box h3 { margin-top: 0; color: #333; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; color: #666; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 14px; }
+        .form-group input[type="file"] { padding: 7px; background: #f8f9fa; }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-submit-colab { background: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; flex: 1; }
+        .btn-submit-colab:hover { background: #218838; }
+        .btn-submit-colab.btn-update { background: #ffc107; color: #333; }
+        .btn-submit-colab.btn-update:hover { background: #e0a800; }
+        .btn-cancel { background: #6c757d; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; flex: 1; display: none; }
+        .btn-cancel:hover { background: #5a6268; }
+
+        .team-list { display: flex; flex-direction: column; gap: 10px; }
+        .team-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee; }
+        .team-item-info { display: flex; align-items: center; gap: 15px; }
+        .team-item-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .team-item-text strong { display: block; color: #333; font-size: 15px; }
+        .team-item-text span { color: #888; font-size: 12px; }
+        
+        .action-btns { display: flex; gap: 8px; }
+        .btn-edit { background: #ffc107; color: #333; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: 0.2s; font-weight: bold; }
+        .btn-edit:hover { background: #e0a800; }
+        .btn-delete { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: 0.2s; font-weight: bold; }
+        .btn-delete:hover { background: #c82333; }
+
+        #loading-msg { text-align: center; color: #666; font-size: 16px; width: 100%; padding: 40px 0; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 1; transition: opacity 0.3s; }
+        .modal-box { background: #fff; padding: 30px; border-radius: 12px; text-align: center; max-width: 320px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; animation: popIn 0.3s ease; }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-close { position: absolute; top: 12px; right: 15px; font-size: 24px; cursor: pointer; color: #aaa; line-height: 1; }
+        .modal-close:hover { color: #333; }
+        .modal-msg { margin: 10px 0 25px; color: #444; font-size: 16px; line-height: 1.4; }
+        .btn-modal-ok { background: #007bff; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; transition: 0.2s; }
+        .btn-modal-ok:hover { background: #0056b3; }
+        .btn-modal-danger { background: #dc3545; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; transition: 0.2s; }
+        .btn-modal-danger:hover { background: #c82333; }
+        .btn-modal-cancel { background: #6c757d; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; transition: 0.2s; }
+        .btn-modal-cancel:hover { background: #5a6268; }
+        
+        .badge-gerente { background: #007bff; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+        .badge-consultor { background: #6c757d; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
     </style>
 </head>
 <body>
 
-    <!-- CABEÇALHO GLOBAL -->
     <div class="main-header">
-        <a href="index.html" class="home-link">
-            <span>⬅️</span> Início
-        </a>
+        <a href="index.html" class="home-link"><span>⬅️</span> Início</a>
         <h1>Elane Modas</h1>
-        <div class="slogan">A sua loja de Moda</div>
-        
-        <div class="pergunta-box">
-            <h2>Resultados por Colaborador</h2>
-        </div>
+        <div class="slogan">A sua Loja de Modas</div>
     </div>
 
-    <!-- TELA DE LOGIN -->
     <div class="login-wrapper" id="login-screen">
         <div class="login-box">
-            <h3>Acesso Restrito</h3>
+            <h3>Acesso Restrito Admin</h3>
             <input type="text" id="username" placeholder="Usuário">
             <input type="password" id="password" placeholder="Senha">
-            <button onclick="autenticar()">Entrar</button>
+            <button onclick="autenticar()" id="btn-login">Entrar no Dashboard</button>
             <div class="error-msg" id="error-message">Usuário ou senha incorretos!</div>
         </div>
     </div>
 
-    <!-- CONTEÚDO DO DASHBOARD -->
     <div class="container hidden" id="dashboard-content">
         
         <div class="dashboard-controls">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="mudarAba('resultados')" id="tab-resultados">📊 Resultados NPS</button>
+                <button class="tab-btn" onclick="mudarAba('equipe')" id="tab-equipe">👥 Equipe</button>
+                <button class="tab-btn" onclick="mudarAba('usuarios')" id="tab-usuarios">🔐 Acessos</button>
+            </div>
             <button class="logout-btn" onclick="logout()">Sair do Sistema</button>
         </div>
         
-        <div id="loading">Carregando dados da planilha...</div>
-        <div class="grid" id="dashboard-grid"></div>
+        <div id="secao-resultados">
+            <div id="loading-nps" style="display:none;">Carregando avaliações do Firebase...</div>
+            <div class="grid" id="dashboard-grid"></div>
+        </div>
+
+        <div id="secao-equipe" class="hidden">
+            <div class="admin-panel">
+                <div class="form-box" id="form-box-container">
+                    <h3 id="form-titulo">Novo Colaborador</h3>
+                    <form id="form-add-colab">
+                        <div class="form-group"><label>Nome Completo</label><input type="text" id="colab-nome" required></div>
+                        <div class="form-group"><label>Cargo / Setor</label><input type="text" id="colab-cargo" required></div>
+                        <div class="form-group"><label>Foto <span id="foto-hint">(Opcional)</span></label><input type="file" id="colab-foto" accept="image/png, image/jpeg, image/jpg"></div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn-submit-colab" id="btn-save-colab">Salvar Colaborador</button>
+                            <button type="button" class="btn-cancel" id="btn-cancel-edit" onclick="cancelarEdicao()">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="list-box">
+                    <h3>Equipe Atual</h3>
+                    <div id="loading-equipe" style="display:none;">Carregando equipe...</div>
+                    <div class="team-list" id="team-list-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="secao-usuarios" class="hidden">
+            <div class="admin-panel">
+                <div class="form-box" id="form-user-container">
+                    <h3 id="form-user-titulo">Novo Usuário</h3>
+                    <form id="form-add-user">
+                        <div class="form-group"><label>Nome da Pessoa</label><input type="text" id="user-nome" required></div>
+                        <div class="form-group"><label>Login de Acesso</label><input type="text" id="user-login" required></div>
+                        <div class="form-group"><label>Senha</label><input type="text" id="user-senha" required></div>
+                        <div class="form-group">
+                            <label>Perfil de Acesso</label>
+                            <select id="user-perfil" required>
+                                <option value="gerente">Gerente (Acesso ao Dashboard e Pesquisa)</option>
+                                <option value="consultor">Consultor (Acesso apenas à Pesquisa)</option>
+                            </select>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn-submit-colab" id="btn-save-user">Salvar Usuário</button>
+                            <button type="button" class="btn-cancel" id="btn-cancel-user-edit" onclick="cancelarEdicaoUsuario()">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="list-box">
+                    <h3>Usuários com Acesso</h3>
+                    <div id="loading-usuarios" style="display:none;">Carregando usuários...</div>
+                    <div class="team-list" id="user-list-container"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script>
-        const USUARIO_MOCADO = "admin";
-        const SENHA_MOCADA = "admin";
+    <!-- Modais -->
+    <div id="custom-alert-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <span class="modal-close" onclick="fecharAlerta()">&times;</span>
+            <div id="alert-icon" style="font-size: 30px; margin-bottom: 10px;">⚠️</div>
+            <p class="modal-msg" id="alert-message">Mensagem aqui.</p>
+            <button class="btn-modal-ok" onclick="fecharAlerta()">Entendi</button>
+        </div>
+    </div>
+    <div id="custom-confirm-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <span class="modal-close" onclick="fecharConfirmacao()">&times;</span>
+            <div style="font-size: 30px; margin-bottom: 10px;">❓</div>
+            <p class="modal-msg" id="confirm-message">Tem certeza?</p>
+            <div class="btn-group">
+                <button class="btn-modal-cancel" onclick="fecharConfirmacao()">Cancelar</button>
+                <button class="btn-modal-danger" id="btn-confirm-action">Sim, Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // =========================================================
+        // Autenticação Firebase
+        // =========================================================
+        const firebaseConfig = {
+                apiKey: "AIzaSyCzZMFsQepPQcagU14TH3Ag2oeZcJ7lav0",
+                authDomain: "pesquisadesatisfacao-3d499.firebaseapp.com",
+                projectId: "pesquisadesatisfacao-3d499",
+                storageBucket: "pesquisadesatisfacao-3d499.firebasestorage.app",
+                messagingSenderId: "659023601137",
+                appId: "1:659023601137:web:c786f5e291c10fddb4b850",
+                measurementId: "G-XZSNL37MM5"
+                };
+
+        // =========================================================
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         
-        // URL DO GOOGLE APPS SCRIPT
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwfUFsI0L8ry7gTQwjI0-WIaBD3OKl-IdVfQBshh2Ac8bbXx32WQS6ZsNWOpxCz5ynN/exec';
+        
+        let editandoId = null; 
+        let editandoUsuarioId = null;
 
-        window.onload = function() {
-            document.getElementById("password").addEventListener("keypress", function(event) {
-                if (event.key === "Enter") autenticar();
-            });
+        window.mostrarAlerta = function(msg, icone = '⚠️') { document.getElementById('alert-icon').innerText = icone; document.getElementById('alert-message').innerText = msg; document.getElementById('custom-alert-modal').classList.remove('hidden'); };
+        window.fecharAlerta = () => document.getElementById('custom-alert-modal').classList.add('hidden');
 
-            if (sessionStorage.getItem('leovtech_admin_logged') === 'true') {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('dashboard-content').classList.remove('hidden');
-                loadDashboard();
-            }
-        };
+        let confirmCallback = null; 
+        window.mostrarConfirmacao = function(msg, callback) { document.getElementById('confirm-message').innerText = msg; confirmCallback = callback; document.getElementById('custom-confirm-modal').classList.remove('hidden'); };
+        window.fecharConfirmacao = () => { document.getElementById('custom-confirm-modal').classList.add('hidden'); confirmCallback = null; };
+        document.getElementById('btn-confirm-action').addEventListener('click', () => { if (confirmCallback) confirmCallback(); fecharConfirmacao(); });
 
-        function autenticar() {
+        // AUTENTICAÇÃO
+        window.autenticar = async function() {
             const userIn = document.getElementById('username').value;
             const passIn = document.getElementById('password').value;
             const errorDiv = document.getElementById('error-message');
+            const btnLogin = document.getElementById('btn-login');
 
-            if (userIn === USUARIO_MOCADO && passIn === SENHA_MOCADA) {
-                sessionStorage.setItem('leovtech_admin_logged', 'true');
-                
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('dashboard-content').classList.remove('hidden');
-                loadDashboard();
-                
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-                errorDiv.style.display = 'none';
-            } else {
-                errorDiv.style.display = 'block';
-                document.getElementById('password').value = '';
-            }
-        }
+            btnLogin.innerText = "Verificando..."; btnLogin.disabled = true;
 
-        function logout() {
-            sessionStorage.removeItem('leovtech_admin_logged');
-            document.getElementById('dashboard-content').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-            document.getElementById('dashboard-grid').innerHTML = ''; 
-        }
-
-        async function loadDashboard() {
-            const loadingEl = document.getElementById('loading');
-            const grid = document.getElementById('dashboard-grid');
             
-            loadingEl.style.display = 'block';
-            loadingEl.innerText = "Conectando ao banco de dados...";
-            
+
             try {
-                const response = await fetch(scriptURL);
-                const textData = await response.text(); 
-                
-                let data;
-                try {
-                    data = JSON.parse(textData);
-                } catch(e) {
-                    console.error("Retorno do Google:", textData);
-                    loadingEl.innerHTML = '<span style="color:red">Erro: O Google bloqueou o acesso aos dados.<br><br><b>Como resolver:</b> No Apps Script, vá em "Implantar" > "Gerenciar implantações" > "Editar" (lápis) e garanta que "Quem tem acesso" está marcado como <b>"Qualquer pessoa"</b>.</span>';
-                    return;
-                }
-                
-                loadingEl.style.display = 'none';
-                
-                if (data.length === 0) {
-                    grid.innerHTML = '<p style="text-align:center; width: 100%; color: #666;">Ainda não há nenhuma avaliação registrada na planilha.</p>';
-                    return;
-                }
+                const q = query(collection(db, "usuarios"), where("login", "==", userIn), where("senha", "==", passIn));
+                const snapshot = await getDocs(q);
 
-                const colaboradores = {};
-                
-                data.forEach(r => {
-                    if(!r.score) return; 
-
-                    let nome = r.colaborador || "Desconhecido";
-                    if (!colaboradores[nome]) {
-                        colaboradores[nome] = { promoters: 0, passives: 0, detractors: 0, total: 0, feedbacks: [] };
+                if (!snapshot.empty) {
+                    const dadosUsuario = snapshot.docs[0].data();
+                    const perfil = dadosUsuario.perfil || 'gerente'; // Fallback se for usuário antigo
+                    
+                    if(perfil === 'consultor') {
+                        // Consultor não entra no dashboard, vai direto pra pesquisa
+                        sessionStorage.setItem('leovtech_auth', 'true');
+                        sessionStorage.setItem('leovtech_role', 'consultor');
+                        window.location.href = 'index.html';
+                    } else {
+                        concluirLogin(perfil);
                     }
-                    
-                    let score = parseInt(r.score);
-                    colaboradores[nome].total++;
-                    
-                    let typeClass = '';
-                    if (score >= 9) { colaboradores[nome].promoters++; typeClass = 'promoter'; }
-                    else if (score >= 7) { colaboradores[nome].passives++; typeClass = 'passive'; }
-                    else { colaboradores[nome].detractors++; typeClass = 'detractor'; }
+                } else {
+                    errorDiv.innerText = "Usuário ou senha incorretos!";
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.innerText = "Erro de conexão. Verifique a internet.";
+                errorDiv.style.display = 'block';
+            }
 
+            btnLogin.innerText = "Entrar no Dashboard"; btnLogin.disabled = false;
+        };
+
+        function concluirLogin(perfil) {
+            sessionStorage.setItem('leovtech_auth', 'true');
+            sessionStorage.setItem('leovtech_role', perfil);
+            iniciarDashboard();
+        }
+
+        window.logout = function() {
+            sessionStorage.removeItem('leovtech_auth');
+            sessionStorage.removeItem('leovtech_role');
+            location.reload();
+        };
+
+        window.mudarAba = function(aba) {
+            ['resultados', 'equipe', 'usuarios'].forEach(id => {
+                document.getElementById(`tab-${id}`).classList.remove('active');
+                document.getElementById(`secao-${id}`).classList.add('hidden');
+            });
+            document.getElementById(`tab-${aba}`).classList.add('active');
+            document.getElementById(`secao-${aba}`).classList.remove('hidden');
+
+            if(aba === 'resultados') carregarNPS();
+            if(aba === 'equipe') carregarEquipe();
+            if(aba === 'usuarios') carregarUsuarios();
+        };
+
+        // Verifica Sessão ao abrir a página
+        if (sessionStorage.getItem('leovtech_auth') === 'true' && sessionStorage.getItem('leovtech_role') === 'gerente') {
+            iniciarDashboard();
+        } else if (sessionStorage.getItem('leovtech_auth') === 'true' && sessionStorage.getItem('leovtech_role') === 'consultor') {
+            // Se um consultor tentar acessar a URL do dashboard, manda ele de volta pro lugar dele
+            window.location.href = "index.html";
+        }
+
+        function iniciarDashboard() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.remove('hidden');
+            carregarNPS(); 
+        }
+
+        // Lógica de NPS e Colaboradores (Idênticas ao arquivo anterior)
+        async function carregarNPS() {
+            const grid = document.getElementById('dashboard-grid'); grid.innerHTML = '';
+            try {
+                const snapshot = await getDocs(collection(db, "avaliacoes"));
+                if (snapshot.empty) { grid.innerHTML = '<p style="color:#666;">Nenhuma avaliação.</p>'; return; }
+                const colaboradores = {};
+                snapshot.forEach(doc => {
+                    const r = doc.data(); let nome = r.colaborador || "Desconhecido";
+                    if (!colaboradores[nome]) colaboradores[nome] = { promoters: 0, passives: 0, detractors: 0, total: 0, feedbacks: [] };
+                    let score = parseInt(r.score); colaboradores[nome].total++;
+                    if (score >= 9) { colaboradores[nome].promoters++; } else if (score >= 7) { colaboradores[nome].passives++; } else { colaboradores[nome].detractors++; }
                     if (r.feedback && r.feedback.trim() !== '') {
-                        let dataStr = r.date;
-                        if(new Date(r.date).toString() !== "Invalid Date") {
-                            dataStr = new Date(r.date).toLocaleDateString('pt-BR');
-                        }
-                        colaboradores[nome].feedbacks.push({ score, text: r.feedback, class: typeClass, date: dataStr });
+                        let typeClass = score >= 9 ? 'promoter' : (score >= 7 ? 'passive' : 'detractor');
+                        colaboradores[nome].feedbacks.push({ score, text: r.feedback, class: typeClass, date: r.date });
                     }
                 });
-
-                grid.innerHTML = ''; 
-                
-                if(Object.keys(colaboradores).length === 0) {
-                    grid.innerHTML = '<p style="text-align:center; width: 100%; color: #666;">Nenhuma nota válida foi encontrada na planilha.</p>';
-                    return;
-                }
-
                 for (let nome in colaboradores) {
-                    let c = colaboradores[nome];
-                    
-                    let nps = Math.round(((c.promoters / c.total) - (c.detractors / c.total)) * 100);
+                    let c = colaboradores[nome]; let nps = Math.round(((c.promoters / c.total) - (c.detractors / c.total)) * 100);
                     let npsColor = nps >= 50 ? '#28a745' : (nps > 0 ? '#ffc107' : '#dc3545');
-
-                    let feedbacksHTML = c.feedbacks.slice().reverse().map(f => `
-                        <div class="feedback-item ${f.class}">
-                            <span class="badge" style="background:${f.class === 'promoter' ? '#28a745' : (f.class === 'passive' ? '#ffc107' : '#dc3545')}">${f.score}</span>
-                            <strong>${f.date}:</strong> ${f.text}
-                        </div>
-                    `).join('');
-                    
+                    let feedbacksHTML = c.feedbacks.reverse().map(f => `<div class="feedback-item" style="border-left-color: ${f.class === 'promoter' ? '#28a745' : (f.class === 'passive' ? '#ffc107' : '#dc3545')}"><span style="background:${f.class === 'promoter' ? '#28a745' : (f.class === 'passive' ? '#ffc107' : '#dc3545')}; color:white; padding:2px 6px; border-radius:4px; margin-right:5px; font-weight:bold;">${f.score}</span><strong>${f.date}:</strong> ${f.text}</div>`).join('');
                     if(feedbacksHTML === '') feedbacksHTML = '<p style="color:#999; font-size:13px; text-align:center;">Sem comentários escritos.</p>';
-
-                    let card = document.createElement('div');
-                    card.className = 'colab-card';
-                    card.innerHTML = `
-                        <div class="colab-header">
-                            <h2>${nome}</h2>
-                            <span class="nps-score" style="color: ${npsColor}">${nps}</span>
-                        </div>
-                        <div class="stats">
-                            <span>Avaliações: <strong>${c.total}</strong></span>
-                            <span style="color:#28a745">P: ${c.promoters}</span>
-                            <span style="color:#ffc107">N: ${c.passives}</span>
-                            <span style="color:#dc3545">D: ${c.detractors}</span>
-                        </div>
-                        <div class="feedback-list">
-                            ${feedbacksHTML}
-                        </div>
-                    `;
+                    let card = document.createElement('div'); card.className = 'colab-card';
+                    card.innerHTML = `<div class="colab-header"><h2>${nome}</h2><span class="nps-score" style="color: ${npsColor}">${nps}</span></div><div class="stats"><span>Votos: <strong>${c.total}</strong></span><span style="color:#28a745">P: ${c.promoters}</span><span style="color:#ffc107">N: ${c.passives}</span><span style="color:#dc3545">D: ${c.detractors}</span></div><div class="feedback-list">${feedbacksHTML}</div>`;
                     grid.appendChild(card);
                 }
-
-            } catch (error) {
-                console.error("Erro na requisição:", error);
-                loadingEl.innerHTML = '<span style="color:red">Falha na conexão com o banco de dados. Verifique a URL do script ou se você está conectado à internet.</span>';
-            }
+            } catch (error) { console.error(error); }
         }
+
+        async function carregarEquipe() {
+            const listContainer = document.getElementById('team-list-container'); listContainer.innerHTML = '';
+            try {
+                const snapshot = await getDocs(query(collection(db, "colaboradores")));
+                if(snapshot.empty) { listContainer.innerHTML = '<p style="color:#666; font-size: 14px;">Nenhum colaborador cadastrado.</p>'; return; }
+                snapshot.forEach(docSnap => {
+                    const dados = docSnap.data(); const id = docSnap.id;
+                    const fallbackImg = `https://ui-avatars.com/api/?name=${encodeURIComponent(dados.nome)}&background=random&color=fff`;
+                    const fotoExibicao = dados.fotoUrl ? dados.fotoUrl : fallbackImg;
+                    const nomeSafe = dados.nome.replace(/'/g, "\\'"); const cargoSafe = dados.cargo.replace(/'/g, "\\'");
+                    let div = document.createElement('div'); div.className = 'team-item';
+                    div.innerHTML = `<div class="team-item-info"><img src="${fotoExibicao}" class="team-item-img"><div class="team-item-text"><strong>${dados.nome}</strong><span>${dados.cargo}</span></div></div><div class="action-btns"><button class="btn-edit" onclick="prepararEdicao('${id}', '${nomeSafe}', '${cargoSafe}')">Editar</button><button class="btn-delete" onclick="excluirColaborador('${id}', '${nomeSafe}')">Excluir</button></div>`;
+                    listContainer.appendChild(div);
+                });
+            } catch (error) { console.error(error); }
+        }
+
+        window.prepararEdicao = function(id, nome, cargo) {
+            editandoId = id; document.getElementById('colab-nome').value = nome; document.getElementById('colab-cargo').value = cargo;
+            document.getElementById('form-titulo').innerText = "Editar Colaborador"; document.getElementById('form-box-container').classList.add('modo-edicao');
+            document.getElementById('btn-save-colab').innerText = "Atualizar Colaborador"; document.getElementById('btn-save-colab').classList.add('btn-update'); document.getElementById('btn-cancel-edit').style.display = 'block'; window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        window.cancelarEdicao = function() {
+            editandoId = null; document.getElementById('form-add-colab').reset(); document.getElementById('form-titulo').innerText = "Novo Colaborador";
+            document.getElementById('form-box-container').classList.remove('modo-edicao'); document.getElementById('btn-save-colab').innerText = "Salvar Colaborador"; document.getElementById('btn-save-colab').classList.remove('btn-update'); document.getElementById('btn-cancel-edit').style.display = 'none';
+        };
+
+        function converterParaBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); }); }
+
+        document.getElementById('form-add-colab').addEventListener('submit', async (e) => {
+            e.preventDefault(); const btn = document.getElementById('btn-save-colab'); btn.innerText = "Salvando..."; btn.disabled = true;
+            try {
+                const fotoFile = document.getElementById('colab-foto').files[0]; let fotoUrlNova = null;
+                if (fotoFile) fotoUrlNova = await converterParaBase64(fotoFile);
+                const dados = { nome: document.getElementById('colab-nome').value, cargo: document.getElementById('colab-cargo').value, status: "ativo" };
+                if (fotoUrlNova) dados.fotoUrl = fotoUrlNova; 
+                if (editandoId) { await updateDoc(doc(db, "colaboradores", editandoId), dados); cancelarEdicao(); mostrarAlerta("Colaborador atualizado!", "✅"); } 
+                else { await addDoc(collection(db, "colaboradores"), dados); document.getElementById('form-add-colab').reset(); mostrarAlerta("Salvo com sucesso!", "✅"); }
+                carregarEquipe(); 
+            } catch (error) { mostrarAlerta("Erro ao salvar.", "❌"); }
+            btn.disabled = false; btn.innerText = editandoId ? "Atualizar Colaborador" : "Salvar Colaborador";
+        });
+
+        window.excluirColaborador = function(id, nome) { mostrarConfirmacao(`Excluir "${nome}"?`, async () => { try { await deleteDoc(doc(db, "colaboradores", id)); if (editandoId === id) cancelarEdicao(); carregarEquipe(); } catch (error) { mostrarAlerta("Erro ao excluir.", "❌"); } }); };
+
+        // GESTÃO DE USUÁRIOS (COM PERFIL)
+        async function carregarUsuarios() {
+            const listContainer = document.getElementById('user-list-container'); listContainer.innerHTML = '';
+            try {
+                const snapshot = await getDocs(query(collection(db, "usuarios")));
+                if(snapshot.empty) { listContainer.innerHTML = '<p style="color:#666;">Nenhum usuário cadastrado.</p>'; return; }
+                snapshot.forEach(docSnap => {
+                    const dados = docSnap.data(); const id = docSnap.id;
+                    const nomeSafe = dados.nome.replace(/'/g, "\\'"); const loginSafe = dados.login.replace(/'/g, "\\'"); const senhaSafe = dados.senha.replace(/'/g, "\\'");
+                    const perfil = dados.perfil || 'gerente';
+                    const badgeClass = perfil === 'gerente' ? 'badge-gerente' : 'badge-consultor';
+                    const badgeText = perfil === 'gerente' ? 'Gerente' : 'Consultor';
+                    
+                    let div = document.createElement('div'); div.className = 'team-item';
+                    div.innerHTML = `
+                        <div class="team-item-info">
+                            <div style="font-size: 24px; padding: 5px;">👤</div>
+                            <div class="team-item-text">
+                                <strong>${dados.nome} <span class="${badgeClass}">${badgeText}</span></strong>
+                                <span>Login: ${dados.login}</span>
+                            </div>
+                        </div>
+                        <div class="action-btns">
+                            <button class="btn-edit" onclick="prepararEdicaoUsuario('${id}', '${nomeSafe}', '${loginSafe}', '${senhaSafe}', '${perfil}')">Editar</button>
+                            <button class="btn-delete" onclick="excluirUsuario('${id}', '${nomeSafe}')">Excluir</button>
+                        </div>
+                    `;
+                    listContainer.appendChild(div);
+                });
+            } catch (error) { console.error(error); }
+        }
+
+        window.prepararEdicaoUsuario = function(id, nome, login, senha, perfil) {
+            editandoUsuarioId = id; document.getElementById('user-nome').value = nome; document.getElementById('user-login').value = login; document.getElementById('user-senha').value = senha; document.getElementById('user-perfil').value = perfil;
+            document.getElementById('form-user-titulo').innerText = "Editar Usuário"; document.getElementById('form-user-container').classList.add('modo-edicao'); document.getElementById('btn-save-user').innerText = "Atualizar"; document.getElementById('btn-save-user').classList.add('btn-update'); document.getElementById('btn-cancel-user-edit').style.display = 'block'; window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        window.cancelarEdicaoUsuario = function() {
+            editandoUsuarioId = null; document.getElementById('form-add-user').reset(); document.getElementById('form-user-titulo').innerText = "Novo Usuário"; document.getElementById('form-user-container').classList.remove('modo-edicao'); document.getElementById('btn-save-user').innerText = "Salvar Usuário"; document.getElementById('btn-save-user').classList.remove('btn-update'); document.getElementById('btn-cancel-user-edit').style.display = 'none';
+        };
+
+        document.getElementById('form-add-user').addEventListener('submit', async (e) => {
+            e.preventDefault(); const btn = document.getElementById('btn-save-user'); btn.innerText = "Salvando..."; btn.disabled = true;
+            try {
+                const dadosUser = { nome: document.getElementById('user-nome').value, login: document.getElementById('user-login').value, senha: document.getElementById('user-senha').value, perfil: document.getElementById('user-perfil').value };
+                if (editandoUsuarioId) { await updateDoc(doc(db, "usuarios", editandoUsuarioId), dadosUser); cancelarEdicaoUsuario(); mostrarAlerta("Usuário atualizado!", "✅"); } 
+                else { await addDoc(collection(db, "usuarios"), dadosUser); document.getElementById('form-add-user').reset(); mostrarAlerta("Novo usuário criado!", "✅"); }
+                carregarUsuarios(); 
+            } catch (error) { mostrarAlerta("Erro ao salvar.", "❌"); }
+            btn.disabled = false; btn.innerText = editandoUsuarioId ? "Atualizar Usuário" : "Salvar Usuário";
+        });
+
+        window.excluirUsuario = function(id, nome) { mostrarConfirmacao(`Excluir acesso de "${nome}"?`, async () => { try { await deleteDoc(doc(db, "usuarios", id)); if (editandoUsuarioId === id) cancelarEdicaoUsuario(); carregarUsuarios(); } catch (error) { console.error(error); } }); };
     </script>
 </body>
 </html>
